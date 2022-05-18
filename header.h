@@ -1,19 +1,24 @@
 #ifndef __TOOLS_H_
 #define __TOOLS_H_
+
 #define MAXOPERATION 6
 #define MAXMAQUINAS 7
 #define MAXTEMPO 60
-//Ficheiro para fazer as assinaturas, só leva assinaturas nada mais de logica
-//Entre os ficheiros
+// este ficheiro serve para fazer as assinaturas
+//  entre os ficheiros
+// este ficheiro so leva as assinaturas nada mais de logica
 
 struct Job;
 struct Operation;
+
+
 
 typedef struct jp{
 	int id;
 	int operacao[7];
 	struct jp *seguinte;
 } Job;
+
 
 typedef struct op{
 	int id;
@@ -23,17 +28,20 @@ typedef struct op{
 	struct op *seguinte;
 } Operation;
 
-//Assinaturas
-//Jobs
+//assinaturas
+
+//JOBS
 Job *inserirJobs(Job *jp, int id, int operacao[MAXOPERATION]);
+Job *removerJobs(Job *jp, int id);
 void listarJobs(Job *jp);
 int quantidadeJobs(Job *jp);
 void guardarJobs(Job *jp);
 void medMinJob(Job *jp,Operation *op);
 void medMaxJob(Job *jp,Operation *op);
 
-//Operações
-Operation *inserirOperacoes(Operation *op, int id, int maq[MAXMAQUINAS], int temp[MAXTEMPO], int size);
+
+//OPERAÇÔES
+Operation *inserirOperacoes(Operation *op, int id, int maq[MAXMAQUINAS], int temp[MAXTEMPO],int size);
 Operation* procuraOperacoes(Operation* op, int id);
 Operation* removerOperacoes(Operation * op, int id);
 Operation* alteraOperacao(Operation* op, int id,int* maq,int* temp, int size);
@@ -41,8 +49,11 @@ void listarOperations(Operation *op);
 int quantidadeOperacoes(Operation * op);
 int minOperacao(Operation *op, int id);
 int maxOperacao(Operation *op, int id);
+int procuraOperacoesInt(Operation* op, int id);
 
-//Menu, etc.
+//OUTROS
 int menu();
+Operation* pullFicheiro(Operation *op, int idCont);
+void saveFicheiro(Job *jp,Operation *op);
 
 #endif

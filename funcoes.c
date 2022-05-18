@@ -5,7 +5,8 @@
 #include <unistd.h>
 #include "header.h"
 
-//Conectar ao header para tudo o que fizer aqui, fica tudo ligado ao main
+//ligar ao header para tudo que eu fazer aqui 
+//fica aqui ligado ao main 
 
 int quantidadeJobs(Job * jp) {
   int soma = 0;
@@ -25,7 +26,8 @@ int quantidadeOperacoes(Operation * op) {
   return (soma);
 }
 
-//Inserir
+//INSERIR
+
 Job* inserirJobs(Job * jp, int id, int* operacao){
 
   Job *jb = (Job*) malloc(sizeof(Job));
@@ -33,7 +35,7 @@ Job* inserirJobs(Job * jp, int id, int* operacao){
   if (jb!=NULL)
   {
     jb->id = id;
-    //Copiar array
+    //copiar array 
     int sizearrayoperacao=sizeof(operacao);
     for(int h=0;h<sizearrayoperacao;h++){
       jb->operacao[h] = operacao[h] ;
@@ -45,19 +47,44 @@ Job* inserirJobs(Job * jp, int id, int* operacao){
   else return(jp);
 }
 
-//Operação
+//BUG: chekar se esta a funcionar se eliminar o primeiro
+Job *removerJobs(Job *jp, int id){
+  //se a lista ficar vazia 
+  if( jp == NULL) return NULL;
+
+
+  if(jp->id == id){
+    Job* aux = jp;
+    jp=jp->seguinte;
+    free(aux);
+  }else{
+    Job *aux=jp;
+    Job *auxAnt = aux;
+    while(aux && aux->id != id){
+      auxAnt=aux;
+      aux = aux->seguinte;
+    }
+    if(aux != NULL){
+      auxAnt->seguinte= aux->seguinte;
+      free(aux);
+    }
+  }
+  return jp;
+}
+
+//operação 
 Operation* inserirOperacoes(Operation * op, int id, int* maq, int* temp, int size){
   Operation *ot = (Operation*) malloc(sizeof(Operation));
   ot->id=id;
   
-  //Passa de um array para o outro (maquina)
+  // passa de um arrey para o outro /maquina/
   for(int i=0; i<size;i++){
     if(maq[i]!=0){
       ot->maquina[i]=maq[i]; 
     } 
   }
 
-  //Passa de um array para o outro (tempo)
+  // passa de um arrey para o outro /tempo/
   for(int j=0; j<size;j++){
     if(temp[j]!=0){
       ot->tempo[j]=temp[j];
@@ -79,24 +106,27 @@ Operation* inserirOperacoes(Operation * op, int id, int* maq, int* temp, int siz
   return op;
 }
 
+
+
+//BUG:erro se remover o primeiro 
 Operation* removerOperacoes(Operation * op, int id){
   
-  if( op == NULL) return NULL; //Se nao tiver nenhuma operação, retorna ao menu.
+  if( op == NULL) return NULL;
 
-  if(op->id == id){ //remove primeiro
-    Operation* aux = op; //aux é a copia da lista. 
-    op=op->seguinte; 
+  if(op->id == id){
+    Operation* aux = op;
+    op=op->seguinte;
     free(aux);
   }
-  else{//Remove no meio 
-    Operation *aux=op;//copia da lista de op
-    Operation *auxAnt = aux;//copia da copia da lista de op (aux aponta pra copia da auxiliar, )
+  else{
+    Operation *aux=op;
+    Operation *auxAnt = aux;
     while(aux && aux->id != id){
       auxAnt=aux;
       aux = aux->seguinte;
     }
-    if(aux != NULL){ //Remove no fim
-      auxAnt->seguinte= aux->seguinte; //
+    if(aux != NULL){
+      auxAnt->seguinte= aux->seguinte;
       free(aux);
     }
 
@@ -104,7 +134,7 @@ Operation* removerOperacoes(Operation * op, int id){
   return op;
 }
 
-Operation* procuraOperacoes(Operation* op, int id){ //Procura a operação que tiver o id igual ao que inserirmos.
+Operation* procuraOperacoes(Operation* op, int id){
   if(op==NULL) return NULL;
   else{
     Operation* aux = op;
@@ -118,17 +148,19 @@ Operation* procuraOperacoes(Operation* op, int id){ //Procura a operação que t
   }
 }
 
+
+
 Operation* alteraOperacao(Operation* op, int id,int* maq,int* temp,int size){
   Operation* aux = procuraOperacoes(op, id);
   if(aux != NULL){
-    aux->sizeMT=size; //altera para o novo size.
-    //Insere as maquinas de novo
-    //Passa de um array para o outro (maquina)
+    aux->sizeMT=size;
+    // insere as maquinas de novo
+    // passa de um arrey para o outro /maquina/
     for(int i=0; i<size;i++){
-    aux->maquina[i]=maq[i]; //iguala as maquinas que estavam na operação sao substituidas pelas maquinas novas que foram adicionadas.
+    aux->maquina[i]=maq[i];
     }
 
-    //Passa de um array para o outro (tempo)
+    // passa de um arrey para o outro /maquina/
     for(int j=0; j<size;j++){
     aux->tempo[j]=temp[j];
     }
@@ -137,29 +169,33 @@ Operation* alteraOperacao(Operation* op, int id,int* maq,int* temp,int size){
   return op;
 }
 
-//Listar
+
+
+//LISTAR
+
 void listarJobs(Job *jp){
   while (jp!=NULL)
  {
-    printf("Job n %d\n",jp->id );
+    printf("Job nº%d\n",jp->id );
     for(int j=0; j<7;j++){
       if(jp->operacao[j]==0) break;
-      printf(" Lista de operacoes:%d\n", jp->operacao[j]);
+      printf(" Lista de operações:%d\n", jp->operacao[j]);
       
     }
     jp = jp->seguinte;
  }
 }
 
+
 void listarOperations(Operation *op){
   while (op!=NULL)
  {
-    printf("Operacao n %d\n",op->id );
+    printf("Operação nº%d\n",op->id );
 
-    //Lista as maquinas que se pode usar 
+    //lista as maquinas que se pode usar 
     printf(" Lista   de  Maquinas:(");
     for(int j=0; j<op->sizeMT;j++){  
-      if(j == op->sizeMT){
+      if(j+2 > op->sizeMT){
         printf("%d", op->maquina[j]);
         break;
       }else
@@ -167,7 +203,10 @@ void listarOperations(Operation *op){
     }
     printf(")\n");
 
-    //Lista o tempo que cada maquina demora
+
+
+    //lista o tempo que cada maquina demora
+
     printf("Tempo de cada Maquina:[");
     for(int j=0; j<op->sizeMT;j++){  
       if(op->tempo[j+1]==0){
@@ -183,22 +222,111 @@ void listarOperations(Operation *op){
  }
 }
 
-//Menu e função que retorna ao menu
+
+
+//BUG: tenho de deixar um linha em branco no final do ficheiro
+//ARMAZENAMENTO
+void saveFicheiro(Job *jp, Operation *op){
+  FILE *f_SAVE= fopen("table.html","a");
+  if(! f_SAVE) printf("O Ficheiro não abriu corretamente!");
+  //TODO: acabar de fazer o guardar com o fputs
+  char data[10]="olaaa";
+  fputs(data, f_SAVE);
+
+  //fecha o ficheiro
+  fclose(f_SAVE);
+
+}
+
+Operation* pullFicheiro(Operation *op, int idCont) {
+	Operation *opP;
+	FILE *f_JOB = fopen("data.txt","r");
+	char symb ;
+  unsigned char symbI;
+	int i = 0, cont = 0, success = 0, arrayM[100], arrayT[100];
+  
+
+    if(f_JOB != NULL) {
+		do {
+			if((symb = getc(f_JOB)) != EOF) {
+				i = cont = 0;
+        Operation *ot=(Operation *)malloc(sizeof(Operation));
+
+				//primeira linha le as maquinas
+				while ((symb=getc(f_JOB))!='\n') {
+					symbI = (int) symb;
+					if(symbI >= '0' && symbI <='9') {
+						arrayM[i] = symbI - '0';
+						cont++;
+						i++;
+					}
+				}
+
+				i=0;
+
+        //segunda linha le os tempos
+        //BUG: tem de ter uma linha sem nada no ficheiro pq senao o ficheiro nao funciona
+				while ((symb=getc(f_JOB))!='\n') {
+					symbI = (int) symb;
+					if(symbI >= '0' && symbI <='9') {
+						arrayT[i] = symbI - '0';
+						i++;
+					}
+				}
+        idCont = quantidadeOperacoes(op);
+        
+				idCont++;
+				ot->id = idCont;
+        ot->sizeMT = cont;
+        for(i=0; i < cont; i++) {
+					ot->maquina[i] = arrayM[i];
+					ot->tempo[i] = arrayT[i];
+				}
+				ot->seguinte = NULL;
+        
+				if(op == NULL){
+          op= ot;
+        }else{
+          Operation* lastnode = op;
+          while(lastnode->seguinte != NULL){
+            lastnode = lastnode->seguinte;
+          }
+          lastnode->seguinte = ot;
+        }
+        
+        success = 0;
+        
+        listarOperations(ot);
+			}
+			else{
+				success = 1;
+        
+			}
+		}while(success == 0);
+	}
+    
+    return (op);
+    fclose(f_JOB);
+}
+
+
+
+//MENU
 int menu(){
     int opcao;
 
     do{
-        printf("---------MENU-------\n");
-        printf("1 - Inserir job com operacoes\n");
-        printf("2 - Quantidade de jobs\n");
+        printf("-------------------------------MENU--------------------------------\n");
+        printf("1 - Inserir job com operações      \t11 - Inserir so operações\n");
+        printf("2 - Quantidade de jobs             \t12 - Eliminar job\n");
         printf("3 - Listar jobs\n");
-        printf("4 - Remover operacao\n");
-        printf("5 - Alterar operacao\n");
-        printf("6 - Listar operacoes\n");
-        printf("7 - Guardar \n");
+        printf("4 - Remover operação\n");
+        printf("5 - Alterar operação\n");
+        printf("6 - Listar operações\n");
+        printf("7 - Guardar no ficheiro\n");
         printf("8 - Media minima por job\n");
         printf("9 - Media maxima por job\n");
-        printf("10 - Inserir operacoes\n");
+        printf("10 - Pull dados do ficheiro\n");
         printf("0 - Sair\n");
         printf("Opcao:");
         scanf("%d",&opcao); 
@@ -206,22 +334,23 @@ int menu(){
     while ((opcao>12)||(opcao<0));
     return(opcao);
 }
- //Calculos
+
+//CALCULOS
 void medMinJob(Job *jp,Operation *op){
   int min;
   int incre=0;
   while (jp!=NULL){
 
-    printf("Job n %d tempo minino: \n",jp->id );
+    printf("Job nº%d tempo minino:\n",jp->id );
     for(int j=0; j<8;j++){
       if(jp->operacao[j]==0) break;
-      printf("Operacao n: %d\n",jp->operacao[j]);
+      printf("Operação nº:%d\n",jp->operacao[j]);
 
-     //Função de retornar a operacao min
+     //inserir aqui a funcao de retornar a operacao min 
       min = minOperacao(op,jp->operacao[j]);
       incre += min;
     }
-    printf("O minimo de tempo e de %d minutos\n",incre+1);
+    printf("O minimo de tempo é de %d minutos\n",incre+1);
     jp = jp->seguinte;
  }
 }
@@ -231,27 +360,27 @@ void medMaxJob(Job *jp,Operation *op){
   int incre=0;
   while (jp!=NULL){
 
-    printf("Job n %d tempo maximo:\n",jp->id );
+    printf("Job nº%d tempo maximo:\n",jp->id );
     for(int j=0; j<8;j++){
       if(jp->operacao[j]==0) break;
-      printf("Operacao n :%d\n",jp->operacao[j]);
+      printf("Operação nº:%d\n",jp->operacao[j]);
 
-     //Função de retornar a operacao max 
+       //inserir aqui a funcao de retornar a operacao max 
       max = maxOperacao(op,jp->operacao[j]);
       incre += max;
     }
-    printf("O maximo de tempo e de %d minutos\n",incre-1);
+    printf("O maximo de tempo é de %d minutos\n",incre-1);
     jp = jp->seguinte;
  }
 }
 
-int minOperacao(Operation *op, int id){ //Soma o tempo minimo de cada operação, soma e da o tempo min do job.
+int minOperacao(Operation *op, int id){
   Operation* aux = procuraOperacoes(op, id);
   int min=100;
   int temp=0;
-  //Verifica se é null
+  //verifica se é null
   if(aux!=NULL){
-    //Lê todos os tempos e guarda o min
+    //le todos os tempos e guarda o maximo
     for(int i=0;i<op->sizeMT;i++){
       if(aux->tempo[i] < min){
         min=aux->maquina[i];
@@ -261,7 +390,7 @@ int minOperacao(Operation *op, int id){ //Soma o tempo minimo de cada operação
     }
   } 
 
-  printf("Maquina n %d e a mais rapida\n",min);
+  printf("Maquina nº%d é a mais rapida\n",min+1);
   return (temp);  
 }
  
@@ -270,11 +399,11 @@ int maxOperacao(Operation *op, int id){
   Operation* aux = procuraOperacoes(op, id);
   int max=0;
   int temp=0;
+  
+  //ler todos os tempos 
 
-  //Ler todos os tempos 
-  if(aux!=NULL){//Verifica se e null
-    printf("%d",op->sizeMT);
-    for(int i=0;i<op->sizeMT;i++){//Le todos os tempos e guarda o maximo
+  if(aux!=NULL){
+    for(int i=0;i<op->sizeMT;i++){
       if(aux->tempo[i] > max){
         max=aux->maquina[i];
         temp=aux->tempo[i];
@@ -283,7 +412,20 @@ int maxOperacao(Operation *op, int id){
     }
   } 
 
-  printf("Maquina n %d e a mais rapida\n",max);
+  printf("Maquina nº%d é a mais lenta\n",max+1);
   return (temp);  
 } 
+int procuraOperacoesInt(Operation *op, int id){
+  if(op==NULL) return 0;
+  else{
+    Operation* aux = op;
+    while(aux != NULL){
+      if(aux->id == id){
+        return 1;
+      }
+      aux= aux->seguinte;
+    }
+    return 0;
+  }
+}
 
