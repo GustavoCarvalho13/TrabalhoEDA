@@ -16,6 +16,7 @@ struct Operation;
 typedef struct jp{
 	int id;
 	int operacao[7];
+	int sizeOP;
 	struct jp *seguinte;
 } Job;
 
@@ -31,8 +32,8 @@ typedef struct op{
 //assinaturas
 
 //JOBS
-Job *inserirJobs(Job *jp, int id, int operacao[MAXOPERATION]);
-Job *removerJobs(Job *jp, int id);
+Job *inserirJobs(Job *jp, int id, int operacao[MAXOPERATION], int size);
+Job *removerJobs(Job *jp, Operation *op, int id);
 void listarJobs(Job *jp);
 int quantidadeJobs(Job *jp);
 void guardarJobs(Job *jp);

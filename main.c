@@ -16,6 +16,7 @@ int main(){
     int qt=0;
     int aa[MAXOPERATION]={};
     int verificacao;
+    int idremover;
 
     do{
         opcao = menu();
@@ -25,16 +26,16 @@ int main(){
                 //inserir Job
                 printf("####Inserir Job####\n");
                 idCountJb=quantidadeJobs(jobs);
-                printf("Job nº%d\n",idCountJb);
+                printf("Job n%d\n",idCountJb);
 
                 //condicao se nao houver operacoes nao deixar adicionar job
                 if(quantidadeOperacoes(operacoes)==0){
-                    printf("Não existe operações insira operações \npara poder inserir um job \n\n");
+                    printf("Não existe operacoes insira operacoes \npara poder inserir um job \n\n");
 
-                    printf("Deseja adicionar operações? Y/N:");
+                    printf("Deseja adicionar operacoes? Y/N:");
                     scanf("%s",cc);
                     if(strcmp(cc,"Y")==0 || strcmp(cc,"y")==0){
-                        printf("###Inserir operações###\n");
+                        printf("###Inserir operacoes###\n");
                         //para ir buscar a quantidade de op
                         idCountOp=quantidadeOperacoes(operacoes);
                         idCountOp++;
@@ -58,25 +59,25 @@ int main(){
                     
                 }
 
-                printf("Quantas operações deseja?\n");
+                printf("Quantas operacoes deseja?\n");
                 scanf("%d",&qtOpCiclo);
                 for(int i=0; i<qtOpCiclo; i++){
                     listarOperations(operacoes);
                     //TODO: verificação se operação existe e não esta repetida
-                    printf("Qual operação deseja:");
+                    printf("Qual operacoo deseja:");
                     scanf("%d",&aa[i]);
                     verificacao=procuraOperacoesInt(operacoes, aa[i]);
                     while (verificacao==0) 
                     {
-                        printf("Nao existe essa operacao");
-                        printf("Qual operação deseja:");
+                        printf("Nao existe essa operacao. ");
+                        printf("Qual operacao deseja:");
                         scanf("%d",&aa[i]);
                         verificacao=procuraOperacoesInt(operacoes, aa[i]);
                     }
                     
                 }
                 //inserir com tudo 
-                jobs=inserirJobs(jobs,idCountJb,aa);
+                jobs=inserirJobs(jobs,idCountJb,aa,qtOpCiclo);
                 idCountJb++;
                 //operacoes= inserirOperacoes(operacoes,1,bb,cc,3);
                 //operacoes= inserirOperacoes(operacoes,2,rr,tt,3);   
@@ -93,8 +94,8 @@ int main(){
             case 4:{
                 int idRemover=0;
                 system("cls");
-                printf("###### remover operação #####\n\n");
-                printf("Qual id da operação:");
+                printf("###### remover operacoo #####\n\n");
+                printf("Qual id da operacao:");
                 scanf("%d",&idRemover);
                 removerOperacoes(operacoes,idRemover);
                 break;
@@ -102,9 +103,9 @@ int main(){
             case 5:{
                 int idAlterar=0;
                 system("cls");
-                printf("###### Alterar Operação #####\n\n");
-                printf("###Inserir operações###\n");
-                printf("Qual id da operação:");
+                printf("###### Alterar Operacao #####\n\n");
+                printf("###Inserir operacoes###\n");
+                printf("Qual id da operacao:");
                 scanf("%d",&idAlterar);
                 printf("Quantas maquinas:");
                 scanf("%d",&qt);
@@ -177,7 +178,9 @@ int main(){
                 break; 
             }  
             case 12:
-            
+                printf("id para remover:");
+                scanf("%d",&idremover);
+                jobs=removerJobs(jobs,operacoes,idremover);
 
             break;
             default:

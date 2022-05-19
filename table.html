@@ -1,45 +1,35 @@
-<!DOCTYPE html>
-<html>
 <head>
-<style>
-table, td, th {
-  border: 2px solid;
-  text-align: center;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-h2{
-  float: center;
-}
-</style>
+  <link rel="stylesheet" href="Styles.css">
 </head>
-<body>
-
-<h2>Makespan de todos os jobs</h2>
-
 <table>
-  <!--linha -->
-  <tr>
-    <th>Jobs</th>
-    <th>Operações</th>
-  </tr>
-  <!--linha -->
-  <tr>
-    <td>1</td>
-    <td>2,4,8,1,7,5</td>
-  </tr>
-  <!--linha -->
-  <tr>
-    <td>2</td>
-    <td>2,4,8,1,7,5</td>
-  </tr>
+  <caption>Tabela de Jobs</caption>
+  <thead>
+    <tr>
+      <th scope="col">Jobs</th>
+      <th scope="col">Operações</th>
+      <th scope="col">Tempo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td data-label="Jobs">1</td>
+      <td data-label="Operações">(1,2)</td>
+      <td data-label="Tempo">[3,4]</td>
+    </tr>
+    <tr>
+      <td scope="row" data-label="Jobs">2</td>
+      <td data-label="Operações">(5,6)</td>
+      <td data-label="Tempo">[7,8]</td>
+    </tr>
+    <tr>
+      <td scope="row" data-label="Jobs">3</td>
+      <td data-label="Operações">(9,10)</td>
+      <td data-label="Tempo">[11,12]</td>
+    </tr>
+    <tr>
+      <td scope="row" data-label="Acount">4</td>
+      <td data-label="Operações">(13,14)</td>
+      <td data-label="Tempo">[15,16]</td>
+    </tr>
+  </tbody>
 </table>
-
-</body>
-</html>
-
-
