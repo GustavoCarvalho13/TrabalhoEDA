@@ -463,6 +463,7 @@ Job *insOpJp(Job * jp,int idOp,int idJp ){
 }
 
 
+//remover operaçao num job
 Job *rmOpJp(Job * jp,int idOp,int idJp ){
   Job *aux = procuraJob(jp, idJp);
 
