@@ -5,9 +5,7 @@
 #include <unistd.h>
 #include "header.h"
 
-//ligar ao header para tudo que eu fazer aqui 
-//fica aqui ligado ao main 
-
+//ligar ao header para tudo que eu fazer aqui ficar ligado ao main
 int quantidadeJobs(Job * jp) {
   int soma = 0;
   while (jp != NULL) {
@@ -40,18 +38,17 @@ Job* inserirJobs(Job * jp, int id, int* operacao, int size){
     for(int h=0;h<sizearrayoperacao;h++){
       jb->operacao[h] = operacao[h] ;
     }
-    jb->sizeOP = size; //quantidade das operações
+    jb->sizeOP = size;
     jb->seguinte = jp;
     return(jb);
   }
   else return(jp);
 }
 
-//BUG: chekar se esta a funcionar se eliminar o primeiro
-Job *removerJobs(Job *jp, Operation *op, int id){
-  //se a lista ficar vazia 
-  if( jp == NULL) return NULL;
 
+Job *removerJobs(Job *jp, Operation *op, int id){
+  //se a lista ficar vazia remove apenas o job
+  if( jp == NULL) return NULL;
 
   if(jp->id == id){
     Job* aux = jp;
@@ -69,49 +66,24 @@ Job *removerJobs(Job *jp, Operation *op, int id){
       free(aux);
     }
   }
-  for (size_t i = 0; i < jp->sizeOP; i++)
-  {
-    if (op->id==jp->operacao[i])
-    {
-      if(op->id == id){
-        Operation* aux =op;
-        op=op->seguinte;
-        free(aux);
-      }
-      else{
-        Operation *aux=op;
-        Operation *auxAnt =aux;
-        while (aux && aux->id != id)
-        {
-          auxAnt=aux;
-          aux = aux->seguinte;
-        }
-        if(aux != NULL){
-          auxAnt->seguinte= aux->seguinte;
-          free(aux);
-        }
-        
-      }
-    }
-    
-  }
   
+  //retorna a lista job 
   return jp;
 }
 
-//operação 
+//operacao 
 Operation* inserirOperacoes(Operation * op, int id, int* maq, int* temp, int size){
   Operation *ot = (Operation*) malloc(sizeof(Operation));
   ot->id=id;
   
-  // passa de um arrey para o outro /maquina/
+  // passa de um arrey para o outro (maquina)
   for(int i=0; i<size;i++){
     if(maq[i]!=0){
       ot->maquina[i]=maq[i]; 
     } 
   }
 
-  // passa de um arrey para o outro /tempo/
+  // passa de um arrey para o outro (tempo)
   for(int j=0; j<size;j++){
     if(temp[j]!=0){
       ot->tempo[j]=temp[j];
@@ -135,11 +107,21 @@ Operation* inserirOperacoes(Operation * op, int id, int* maq, int* temp, int siz
 
 
 
-//BUG:erro se remover o primeiro 
-Operation* removerOperacoes(Operation * op, int id){
-  
+//erro se remover o primeiro 
+Operation* removerOperacoes(Operation *op, int id){
+  printf(" IDDDD :%d",id);
+  if(id == 1 ){
+    //cria uma variavel temporiaria 
+    //aponta o inicio da lista para o apontador seguinte 
+    Operation* aux = op;
+    aux = op->seguinte;
+    
+    return aux;
+  }
   if( op == NULL) return NULL;
 
+  //remover primeiro posição
+  
   if(op->id == id){
     Operation* aux = op;
     op=op->seguinte;
@@ -182,12 +164,12 @@ Operation* alteraOperacao(Operation* op, int id,int* maq,int* temp,int size){
   if(aux != NULL){
     aux->sizeMT=size;
     // insere as maquinas de novo
-    // passa de um arrey para o outro /maquina/
+    // passa de um arrey para o outro (maquina)
     for(int i=0; i<size;i++){
     aux->maquina[i]=maq[i];
     }
 
-    // passa de um arrey para o outro /maquina/
+    // passa de um arrey para o outro (maquina)
     for(int j=0; j<size;j++){
     aux->tempo[j]=temp[j];
     }
@@ -203,7 +185,7 @@ Operation* alteraOperacao(Operation* op, int id,int* maq,int* temp,int size){
 void listarJobs(Job *jp){
   while (jp!=NULL)
  {
-    printf("Job n%d\n",jp->id );
+    printf("Job n %d\n",jp->id );
     for(int j=0; j<7;j++){
       if(jp->operacao[j]==0) break;
       printf(" Lista de operacoes:%d\n", jp->operacao[j]);
@@ -217,7 +199,7 @@ void listarJobs(Job *jp){
 void listarOperations(Operation *op){
   while (op!=NULL)
  {
-    printf("Operacao n%d\n",op->id );
+    printf("operacao n %d\n",op->id );
 
     //lista as maquinas que se pode usar 
     printf(" Lista   de  Maquinas:(");
@@ -251,12 +233,12 @@ void listarOperations(Operation *op){
 
 
 
-//BUG: tenho de deixar um linha em branco no final do ficheiro
+//é necesario deixar um linha em branco no final do ficheiro se nao buga
 //ARMAZENAMENTO
 void saveFicheiro(Job *jp, Operation *op){
   FILE *f_SAVE= fopen("table.html","a");
   if(! f_SAVE) printf("O Ficheiro nao abriu corretamente!");
-  //TODO: acabar de fazer o guardar com o fputs
+  
   char data[10]="olaaa";
   fputs(data, f_SAVE);
 
@@ -292,7 +274,7 @@ Operation* pullFicheiro(Operation *op, int idCont) {
 				i=0;
 
         //segunda linha le os tempos
-        //BUG: tem de ter uma linha sem nada no ficheiro pq senao o ficheiro nao funciona
+        //tem de ter uma linha sem nada no ficheiro se nao nao funciona
 				while ((symb=getc(f_JOB))!='\n') {
 					symbI = (int) symb;
 					if(symbI >= '0' && symbI <='9') {
@@ -341,24 +323,19 @@ Operation* pullFicheiro(Operation *op, int idCont) {
 //MENU
 int menu(){
     int opcao;
-
     do{
         printf("-------------------------------MENU--------------------------------\n");
-        printf("1 - Inserir job com operacoes      \t11 - Inserir so operacoes\n");
-        printf("2 - Quantidade de jobs             \t12 - Eliminar job\n");
-        printf("3 - Listar jobs\n");
-        printf("4 - Remover operacao\n");
-        printf("5 - Alterar operacao\n");
-        printf("6 - Listar operacoes\n");
-        printf("7 - Guardar no ficheiro\n");
-        printf("8 - Media minima por job\n");
-        printf("9 - Media maxima por job\n");
-        printf("10 - Pull dados do ficheiro\n");
-        printf("0 - Sair\n");
+        printf("1 - Inserir job com operacoes     \t8 - Media minima por job\n");
+        printf("2 - Quantidade de jobs            \t9 - Media maxima por job\n");
+        printf("3 - Listar jobs                   \t10 - Pull de dados do ficheiro\n");
+        printf("4 - Remover operacao              \t11 - Inserir apeas operacoes\n");
+        printf("5 - Alterar operacao              \t12 - Eliminar job\n");
+        printf("6 - Listar operacoes              \t13 - Inserir operacao num job\n");
+        printf("7 - Guardar no ficheiro           \t0 - Sair\n");
         printf("Opcao:");
         scanf("%d",&opcao); 
     }
-    while ((opcao>12)||(opcao<0));
+    while ((opcao>20)||(opcao<0));
     return(opcao);
 }
 
@@ -368,12 +345,12 @@ void medMinJob(Job *jp,Operation *op){
   int incre=0;
   while (jp!=NULL){
 
-    printf("Job n%d tempo minino:\n",jp->id );
+    printf("Job n %d tempo minino:\n",jp->id );
     for(int j=0; j<8;j++){
       if(jp->operacao[j]==0) break;
-      printf("Operacao n:%d\n",jp->operacao[j]);
+      printf("operacao n :%d\n",jp->operacao[j]);
 
-     //inserir aqui a funcao de retornar a operacao min 
+     //funcao de retornar a operacao min
       min = minOperacao(op,jp->operacao[j]);
       incre += min;
     }
@@ -387,16 +364,16 @@ void medMaxJob(Job *jp,Operation *op){
   int incre=0;
   while (jp!=NULL){
 
-    printf("Job n%d tempo maximo:\n",jp->id );
+    printf("Job n %d tempo maximo:\n",jp->id );
     for(int j=0; j<8;j++){
       if(jp->operacao[j]==0) break;
-      printf("Operacao n:%d\n",jp->operacao[j]);
+      printf("operacao n :%d\n",jp->operacao[j]);
 
-       //inserir aqui a funcao de retornar a operacao max 
+       //funcao de retornar a operacao max 
       max = maxOperacao(op,jp->operacao[j]);
       incre += max;
     }
-    printf("O maximo de tempo e de %d minutos\n",incre-1);
+    printf("O maximo de tempo é de %d minutos\n",incre-1);
     jp = jp->seguinte;
  }
 }
@@ -405,7 +382,7 @@ int minOperacao(Operation *op, int id){
   Operation* aux = procuraOperacoes(op, id);
   int min=100;
   int temp=0;
-  //verifica se é null
+  //verifica se é NULL
   if(aux!=NULL){
     //le todos os tempos e guarda o maximo
     for(int i=0;i<op->sizeMT;i++){
@@ -417,7 +394,7 @@ int minOperacao(Operation *op, int id){
     }
   } 
 
-  printf("Maquina n%d é a mais rapida\n",min+1);
+  printf("Maquina n %d é a mais rapida\n",min+1);
   return (temp);  
 }
  
@@ -439,9 +416,12 @@ int maxOperacao(Operation *op, int id){
     }
   } 
 
-  printf("Maquina n%d é a mais lenta\n",max+1);
+  printf("Maquina n %d é a mais lenta\n",max+1);
   return (temp);  
 } 
+
+
+
 int procuraOperacoesInt(Operation *op, int id){
   if(op==NULL) return 0;
   else{
@@ -455,5 +435,46 @@ int procuraOperacoesInt(Operation *op, int id){
     return 0;
   }
 }
- 
 
+Job* procuraJob(Job* jp, int id){
+  if(jp==NULL) return NULL;
+  else{
+    Job* aux = jp;
+    while(aux != NULL){
+      if(aux->id == id){
+        return aux;
+      }
+      aux= aux->seguinte;
+    }
+    return NULL;
+  }
+}
+
+
+//inserir operacao em job 
+Job *insOpJp(Job * jp,int idOp,int idJp ){
+  Job *aux = procuraJob(jp, idJp);
+
+  //incrementa o tamanho 
+  aux->sizeOP++;
+  aux->operacao[jp->sizeOP-1]=idOp;
+
+  return jp;
+}
+
+
+Job *rmOpJp(Job * jp,int idOp,int idJp ){
+  Job *aux = procuraJob(jp, idJp);
+
+  for(int i=0;i<jp->sizeOP;i++){
+    if(idOp==aux->operacao[i]){
+    //Nao finalizado
+      for(int f=i-1;f<jp->sizeOP-1;f++){
+        aux->operacao[i]=aux->operacao[i+1];
+      }
+    }
+  }
+  aux->sizeOP -=1;
+
+  return jp;
+}
